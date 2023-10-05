@@ -24,7 +24,7 @@ namespace Bulky.DataAccess.Repository
             return query.FirstOrDefault();
         }
 
-        public List<T> GetAll()
+        public IEnumerable<T> GetAll()
         {
             IQueryable<T> query = dbSet;
             return query.ToList();
