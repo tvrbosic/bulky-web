@@ -1,5 +1,6 @@
 ﻿using Bulky.DataAccess.Repository.Interfaces;
 using Bulky.Models;
+using Bulky.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -30,22 +31,36 @@ namespace BulkyWeb.Areas.Admin.Controllers
             });
 
             //ViewBag.CategoryList = CategoryList;
-            ViewData["CategoryList"] = CategoryList;
+            //ViewData["CategoryList"] = CategoryList;
+            ProductVM productVM = new()
+            {
+                CategoryList = CategoryList,
+                Product = new Product()
+            };
 
-            return View();
+            return View("CreateOrEdit", productVM);
         }
 
         [HttpPost]
-        public IActionResult Create(Product obj)
+        public IActionResult Create(ProductVM productVM, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Product.Add(obj);
+                _unitOfWork.Product.Add(productVM.Product);
                 _unitOfWork.Save();
                 TempData["success"] = "Product created successfully!";
                 return RedirectToAction("Index");
             }
-            return View();
+            else
+            {
+                productVM.CategoryList = _unitOfWork.Category.GetAll().Select(item => new SelectListItem
+                {
+                    Text = item.Name,
+                    Value = item.Id.ToString()
+                });
+                
+                return View("CreateOrEdit", productVM);
+            }
         }
 
         public IActionResult Edit(int? id)
@@ -61,7 +76,19 @@ namespace BulkyWeb.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            return View(product);
+
+            IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category.GetAll().Select(item => new SelectListItem
+            {
+                Text = item.Name,
+                Value = item.Id.ToString()
+            });
+
+            ProductVM productVM = new()
+            {
+                CategoryList = CategoryList,
+                Product = product
+            };
+            return View("CreateOrEdit", productVM);
         }
 
         [HttpPost]
@@ -74,7 +101,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 TempData["success"] = "Product updated successfully!";
                 return RedirectToAction("Index");
             }
-            return View();
+            return View("CreateOrEdit");
         }
 
         public IActionResult Delete(int? id)
