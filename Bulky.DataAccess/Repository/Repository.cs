@@ -17,16 +17,34 @@ namespace Bulky.DataAccess.Repository
             this.dbSet = _db.Set<T>();
         }
 
-        public T Get(Expression<Func<T, bool>> filter)
+        // includeProperties will be comma separated string to include FK related model properties
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             query = query.Where(filter);
+            // Include FK related model data
+            if (string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includePoperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includePoperty);
+                }
+            }
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll()
+        // includeProperties will be comma separated string to include FK related model properties
+        public IEnumerable<T> GetAll(string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
+            // Include FK related model data
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includePoperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includePoperty);
+                }
+            }
             return query.ToList();
         }
 
