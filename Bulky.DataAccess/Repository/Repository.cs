@@ -23,7 +23,7 @@ namespace Bulky.DataAccess.Repository
             IQueryable<T> query = dbSet;
             query = query.Where(filter);
             // Include FK related model data
-            if (string.IsNullOrEmpty(includeProperties))
+            if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includePoperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
