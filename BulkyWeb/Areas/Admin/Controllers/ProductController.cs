@@ -156,7 +156,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         [HttpDelete]
         public IActionResult Delete(int? id)
         {
-            var productToBeDeleted = _unitOfWork.Product.Get(u => u.Id == id);
+            var productToBeDeleted = _unitOfWork.Product.Get(item => item.Id == id);
             if(productToBeDeleted == null)
             {
                 return Json(new { success = false, message = "Error while deleting" });
