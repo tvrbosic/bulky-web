@@ -34,7 +34,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         {
             //if (obj.Name == obj.DisplayOrder.ToString())
             //{
-            //    ModelState.AddModelError("Name", "The Display Order field cannot exactly match category name.");
+            //    ModelState.AddModelError("Name", "The Display Order field cannot exactly match company name.");
             //}
 
             if (ModelState.IsValid)
@@ -54,13 +54,13 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            Category? category = _unitOfWork.Category.Get(item => item.Id == id);
+            Category? company = _unitOfWork.Category.Get(item => item.Id == id);
 
-            if (category == null)
+            if (company == null)
             {
                 return NotFound();
             }
-            return View(category);
+            return View(company);
         }
 
         [HttpPost]
