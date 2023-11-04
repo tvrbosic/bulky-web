@@ -44,9 +44,15 @@ namespace Bulky.DataAccess.Repository
         }
 
             // includeProperties will be comma separated string to include FK related model properties
-            public IEnumerable<T> GetAll(string? includeProperties = null)
+            public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
+
+            if (filter!=null )
+            {
+                query = query.Where(filter);
+            }
+
             // Include FK related model data
             if (!string.IsNullOrEmpty(includeProperties))
             {
