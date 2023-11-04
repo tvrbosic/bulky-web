@@ -2,7 +2,7 @@
 using Bulky.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-
+using System.ComponentModel.Design;
 
 namespace Bulky.DataAccess.Repository
 {
@@ -18,9 +18,18 @@ namespace Bulky.DataAccess.Repository
         }
 
         // includeProperties will be comma separated string to include FK related model properties
-        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query;
+            if (tracked)
+            {
+                query = dbSet;
+            }
+            else
+            {
+                query = dbSet.AsNoTracking();
+            }
+            
             query = query.Where(filter);
             // Include FK related model data
             if (!string.IsNullOrEmpty(includeProperties))
@@ -31,10 +40,11 @@ namespace Bulky.DataAccess.Repository
                 }
             }
             return query.FirstOrDefault();
+
         }
 
-        // includeProperties will be comma separated string to include FK related model properties
-        public IEnumerable<T> GetAll(string? includeProperties = null)
+            // includeProperties will be comma separated string to include FK related model properties
+            public IEnumerable<T> GetAll(string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             // Include FK related model data

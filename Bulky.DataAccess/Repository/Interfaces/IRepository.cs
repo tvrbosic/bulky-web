@@ -8,7 +8,7 @@ namespace Bulky.DataAccess.Repository.Interfaces
         // T - Generic model of table in database with which we want to interact with or conduct CRUD operations
         IEnumerable<T> GetAll(string? includeProperties = null);
 
-        T Get(Expression<Func<T, bool>> filter, string? includeProperties = null);
+        T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false);
 
         void Add(T entity);
 
