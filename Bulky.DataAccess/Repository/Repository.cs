@@ -2,7 +2,6 @@
 using Bulky.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.ComponentModel.Design;
 
 namespace Bulky.DataAccess.Repository
 {
